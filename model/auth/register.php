@@ -20,7 +20,7 @@ function registerUser($userName, $email, $empresa, $status, $passwordHash) {
     try {
         $conexao = new Conexao();
         $pdo = $conexao->conectar();
-        
+
         $sql = "INSERT INTO users (UserName, Email, Empresa, Status, PasswordHash) VALUES (:userName, :email, :empresa, :status, :passwordHash)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':userName', $userName, PDO::PARAM_STR);
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($body['userName'], $body['ema
     $empresa = filter_var($body['empresa'], FILTER_VALIDATE_INT);
     $status = filter_var($body['status'], FILTER_SANITIZE_STRING);
     $password = filter_var($body['password'], FILTER_SANITIZE_STRING);
-    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+    $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
     if ($userName && $email && $status && $passwordHash) {
         try {

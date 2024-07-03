@@ -28,3 +28,17 @@ ADD CONSTRAINT FK_Role FOREIGN KEY (RoleId) REFERENCES roles(Id) ON DELETE CASCA
 
 -- -----
 
+CREATE TABLE pessoa (
+  Id int NOT NULL AUTO_INCREMENT,
+  Nome varchar(20) NULL,
+  Idade int NULL,
+  Cidade varchar(100) NULL,
+  Estado varchar(2) NULL,
+  EmpresaId int null,
+  TipoId int null,
+  UserId int null
+  PRIMARY KEY (Id)
+);
+
+ALTER TABLE pessoa
+ADD CONSTRAINT Fk_Pessoa FOREIGN KEY (UserId) REFERENCES users (Id) ON DELETE CASCADE;
