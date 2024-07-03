@@ -21,7 +21,6 @@ function obtemToken($user, $password){
         $conexao = new Conexao();
         $pdo = $conexao->conectar();
         
-        // Buscar informações do usuário
         $stmt = $pdo->prepare("SELECT Id, UserName, PasswordHash FROM users WHERE UserName = :user");
         $stmt->bindParam(':user', $user, PDO::PARAM_STR);
         $stmt->execute();
@@ -30,7 +29,6 @@ function obtemToken($user, $password){
             $userRecord = $stmt->fetch(PDO::FETCH_ASSOC);
             if (password_verify($password, $userRecord['PasswordHash'])) {
                 
-                // Buscar roles do usuário
                 $stmtRoles = $pdo->prepare("
                     SELECT r.Name 
                     FROM roles r 
