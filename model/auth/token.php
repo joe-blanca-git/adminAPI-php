@@ -40,16 +40,13 @@ function obtemToken($user, $password){
                 
                 $roles = $stmtRoles->fetchAll(PDO::FETCH_COLUMN);
 
-                // Calcular data de expiração do token (atual + 4 horas)
                 $expiracao = new DateTime();
-                $expiracao->add(new DateInterval('PT4H')); // Adiciona 4 horas
+                $expiracao->add(new DateInterval('PT4H')); 
 
-                // Calcular tempo restante para expiração do token
                 $agora = new DateTime();
                 $diff = $expiracao->getTimestamp() - $agora->getTimestamp();
                 $expireIn = ($diff > 0) ? $diff : 0;
 
-                // Construir o token com informações específicas
                 $tokenData = array(
                     "access_token" => base64_encode(openssl_encrypt(json_encode(array(
                         "usuario" => array(
@@ -77,9 +74,6 @@ function obtemToken($user, $password){
         return false; 
     }
 }
-
-
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($body['user'], $body['password'])) {
     $user = filter_var($body['user'], FILTER_SANITIZE_STRING);
