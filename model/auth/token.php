@@ -21,7 +21,7 @@ function obtemToken($user, $password){
         $conexao = new Conexao();
         $pdo = $conexao->conectar();
         
-        $stmt = $pdo->prepare("SELECT Id, UserName, PasswordHash FROM users WHERE UserName = :user");
+        $stmt = $pdo->prepare("SELECT Id, UserName, IdEmpresa, PasswordHash FROM users WHERE UserName = :user");
         $stmt->bindParam(':user', $user, PDO::PARAM_STR);
         $stmt->execute();
         
@@ -30,15 +30,15 @@ function obtemToken($user, $password){
             if (password_verify($password, $userRecord['PasswordHash'])) {
                 
                 $stmtRoles = $pdo->prepare("
-                    SELECT r.Name 
-                    FROM roles r 
-                    INNER JOIN userroles ur ON ur.RoleId = r.Id 
-                    WHERE ur.UserId = :userId
-                ");
-                $stmtRoles->bindParam(':userId', $userRecord['Id'], PDO::PARAM_INT);
-                $stmtRoles->execute();
-                
-                $roles = $stmtRoles->fetchAll(PDO::FETCH_COLUMN);
+                SELECT type, r.Name as value
+                FROM roles r 
+                INNER JOIN userroles ur ON ur.RoleId = r.Id 
+                WHERE ur.UserId = :userId
+            ");
+            $stmtRoles->bindParam(':userId', $userRecord['Id'], PDO::PARAM_INT);
+            $stmtRoles->execute();
+            
+            $roles = $stmtRoles->fetchAll(PDO::FETCH_ASSOC);
 
                 $expiracao = new DateTime();
                 $expiracao->add(new DateInterval('PT4H')); 
@@ -59,9 +59,10 @@ function obtemToken($user, $password){
                     )), 'AES-128-ECB', 'bitApi2024Likeaboss', OPENSSL_RAW_DATA)),
                     "expiracao" => $expiracao->format('Y-m-d H:i:s'),
                     "expire_in" => $expireIn,
-                    "usuario" => array(
+                    "usuarioToken" => array(
                         "userName" => $userRecord['UserName'],
-                        "ID" => $userRecord['Id'],
+                        "id" => $userRecord['Id'],
+                        "idEmpresa" => $userRecord['IdEmpresa'],
                         "claims" => $roles
                     )
                 );

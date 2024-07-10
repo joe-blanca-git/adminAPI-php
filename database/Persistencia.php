@@ -6,7 +6,7 @@ private static $pdo;
 public function conectar(){
 try{
 if(is_null(self::$pdo)){
-self::$pdo = new PDO("mysql:host=localhost;dbname=bitapi-php;charset=utf8","root","mysql");
+self::$pdo = new PDO("mysql:host=localhost;dbname=apibit;charset=utf8","root","mysql");
 self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 self::$pdo->exec("SET NAMES utf8");
 }
